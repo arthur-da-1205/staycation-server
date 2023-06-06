@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Hotel {
+  hotel_id    Int    @id @default(autoincrement())
+  name        String
+  address     String
+  city        String
+  country     String
+  rating      Float
+  price_range String
+  amenities   String
+  description String
+
+  rooms   Room[]
+  Reviews Reviews[]
+}
+
+model Room {
+  room_id         Int     @id @default(autoincrement())
+  hotel_id        Int
+  room_number     String
+  room_type       String
+  capacity        Int
+  price_per_night Float
+  availability    Boolean
+
+  hotel    Hotel      @relation(fields: [hotel_id], references: [hotel_id])
+  bookings Bookings[]
+}
+
+model User {
+  user_id   Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  phone     String
+  address   String
+  customers Customers?
+}
+
+model Customers {
+  customer_id      Int    @id @default(autoincrement())
+  user_id          Int    @unique
+  customer_name    String
+  customer_id_card String
+
+  user     User       @relation(fields: [user_id], references: [user_id])
+  bookings Bookings[]
+  reviews  Reviews[]
+}
+
+model Bookings {
+  booking_id     Int      @id @default(autoincrement())
+  customer_id    Int
+  room_id        Int
+  check_in_date  DateTime
+  check_out_date DateTime
+  total_price    Float
+
+  customer Customers @relation(fields: [customer_id], references: [customer_id])
+  room     Room      @relation(fields: [room_id], references: [room_id])
+}
+
+model Reviews {
+  review_id   Int      @id @default(autoincrement())
+  hotel_id    Int
+  customer_id Int
+  rating      Float
+  comment     String
+  timestamp   DateTime
+
+  hotel    Hotel     @relation(fields: [hotel_id], references: [hotel_id])
+  customer Customers @relation(fields: [customer_id], references: [customer_id])
+}

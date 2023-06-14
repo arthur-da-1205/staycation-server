@@ -22,7 +22,6 @@ async function authMiddleware(req: RequestUser, res: Response, next: NextFunctio
 
     req.user = admin;
     next();
-    console.log(adminId);
   } catch (error) {
     res.status(401).json({ error: 'Something went wrong!' });
   }

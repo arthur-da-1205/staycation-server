@@ -1,8 +1,8 @@
 import { validationMiddleware } from "./../middlewares/validattion.middleware";
 import express from "express";
-import HotelController from "../controllers/hotel.controller";
-import authMiddleware from "src/middlewares/auth.middleware";
-import { InputHotelDto } from "src/dto/hotel.dto";
+import HotelController from "@controllers/hotel.controller";
+import authMiddleware from "@middlewares/auth.middleware";
+import { InputHotelDto } from "@dto/hotel.dto";
 
 const hotelRouter = express.Router();
 const path = "/v1/hotel";

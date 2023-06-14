@@ -1,6 +1,6 @@
-import { InputHotelDto } from "src/dto/hotel.dto";
-import { prisma } from "../libraries/prisma";
-import { HotelModel } from "../interfaces/hotel.model";
+import { InputHotelDto } from "@dto/hotel.dto";
+import { prisma } from "@libraries/prisma";
+import { HotelModel } from "@interfaces/hotel.model";
 
 class HotelService {
   public static async getAllHotels(): Promise<HotelModel[]> {

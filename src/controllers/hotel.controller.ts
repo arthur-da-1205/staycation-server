@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { HotelModel } from "../interfaces/hotel.model";
-import HotelService from "../services/hotel.service";
+import { HotelModel } from "@interfaces/hotel.model";
+import HotelService from "@services/hotel.service";
 
 class HotelController {
   public static async getAllHotels(req: Request, res: Response): Promise<void> {

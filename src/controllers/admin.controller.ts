@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import AdminService from "../services/admin.service";
-import { CreateAdminDto } from "src/dto/admin.dto";
+import AdminService from "@services/admin.service";
+import { CreateAdminDto } from "@dto/admin.dto";
 
 class AdminController {
   public static async getAllAdmins(req: Request, res: Response): Promise<void> {

@@ -1,11 +1,11 @@
-import { CreateAdminDto } from "src/dto/admin.dto";
-import { prisma } from "../libraries/prisma";
-import { Admin } from "../interfaces/admin.model";
-import { HttpException } from "../libraries/httpException";
-import { Bcrypt } from "../libraries/bcrypt";
+import { CreateAdminDto } from '@dto/admin.dto';
+import { AdminModel } from '@interfaces/admin.model';
+import { Bcrypt } from '@libraries/bcrypt';
+import { HttpException } from '@libraries/httpException';
+import { prisma } from '@libraries/prisma';
 
 class AdminService {
-  public static async getAllAdmins(): Promise<Admin[]> {
+  public static async getAllAdmins(): Promise<AdminModel[]> {
     return await prisma.admin.findMany();
   }
 
@@ -15,17 +15,9 @@ class AdminService {
       select: { username: true },
     });
 
-    if (checkExisting)
-      throw new HttpException(400, "Something went wrong", {
-        username: ["Username sudah terdaftar"],
-      });
+    if (checkExisting) throw new HttpException(400, 'Something went wrong', 'Username sudah terdaftar');
 
-    if (!data.password)
-      throw new HttpException(
-        400,
-        "Something went wrong",
-        "Password cannot be empty!"
-      );
+    if (!data.password) throw new HttpException(400, 'Something went wrong', 'Password cannot be empty!');
 
     const hashedPassword = await Bcrypt.encrypt(data.password);
 

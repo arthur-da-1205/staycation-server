@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
-import { HotelModel } from '@interfaces/hotel.model';
-import HotelService from '@services/hotel.service';
 import { InputHotelDto } from '@dto/hotel.dto';
+import HotelService from '@services/hotel.service';
+import { NextFunction, Request, Response } from 'express';
 
 class HotelController {
   public static async getAllHotels(req: Request, res: Response): Promise<void> {
@@ -15,8 +14,10 @@ class HotelController {
 
   public static async getHotelById(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
+
     try {
-      const hotel = await HotelService.getHotelNyId(id);
+      const hotel = await HotelService.getHotelById(id);
+
       if (hotel) {
         res.status(200).json({ message: 'OK', data: hotel });
       } else {
@@ -43,6 +44,7 @@ class HotelController {
   public static async updateHotel(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const { name, address, city, country, rating, price_range, amenities, description } = req.body;
+
     try {
       const updatedHotel = await HotelService.updateHotel(id, {
         name,
@@ -54,6 +56,7 @@ class HotelController {
         amenities,
         description,
       });
+
       res.status(200).json({ message: 'OK', data: updatedHotel });
     } catch (error) {
       res.status(500).json({ error: 'An error occurred' });
@@ -62,8 +65,10 @@ class HotelController {
 
   public static async deleteHotel(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
+
     try {
       const deletedHotel = await HotelService.deleteHotel(id);
+
       res.status(200).json({ message: 'OK', data: `${deletedHotel.name} deleted` });
     } catch (error) {
       res.status(500).json({ error: 'An error occurred' });

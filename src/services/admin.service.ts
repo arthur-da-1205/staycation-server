@@ -1,5 +1,5 @@
 import { CreateAdminDto } from '@dto/admin.dto';
-import { AdminModel } from '@interfaces/admin.model';
+import { AdminModel } from '@model/admin.model';
 import { Bcrypt } from '@libraries/bcrypt';
 import { HttpException } from '@libraries/httpException';
 import { prisma } from '@libraries/prisma';

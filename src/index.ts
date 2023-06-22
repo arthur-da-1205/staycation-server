@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import { hotelRouter, adminRouter, authRouter } from './routes';
+import { hotelRouter, adminRouter, authRouter, roomRouter } from './routes';
 
 dotenv.config();
 
@@ -18,6 +18,7 @@ app.use(cookieParser());
 app.use(hotelRouter);
 app.use(adminRouter);
 app.use(authRouter);
+app.use(roomRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Server is Running');

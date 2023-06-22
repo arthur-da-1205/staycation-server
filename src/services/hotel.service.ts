@@ -1,15 +1,19 @@
-import { InputHotelDto } from '@dto/hotel.dto';
+import { InputHotelDto, UpdateHotelDto } from '@dto/hotel.dto';
 import { prisma } from '@libraries/prisma';
-import { HotelModel } from '@interfaces/hotel.model';
+import { HotelModel } from '@model/hotel.model';
 
 class HotelService {
   public static async getAllHotels(): Promise<HotelModel[]> {
-    const hotels = await prisma.hotel.findMany();
+    const hotels = await prisma.hotel.findMany({
+      include: {
+        rooms: true,
+      },
+    });
 
     return hotels;
   }
 
-  public static async getHotelNyId(id: string): Promise<HotelModel | null> {
+  public static async getHotelById(id: string): Promise<HotelModel | null> {
     return await prisma.hotel.findUnique({
       where: { hotel_id: id },
     });
@@ -19,7 +23,7 @@ class HotelService {
     return await prisma.hotel.create({ data });
   }
 
-  public static async updateHotel(id: string, data: Partial<HotelModel>): Promise<HotelModel> {
+  public static async updateHotel(id: string, data: Partial<UpdateHotelDto>): Promise<HotelModel> {
     return prisma.hotel.update({
       where: { hotel_id: id },
       data,

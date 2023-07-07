@@ -10,8 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Admin {
+  id         String   @id @default(uuid())
+  username   String   @unique
+  password   String
+  role       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
 model Hotel {
-  hotel_id    Int    @id @default(autoincrement())
+  hotel_id    String @id @default(uuid())
   name        String
   address     String
   city        String
@@ -26,33 +35,40 @@ model Hotel {
 }
 
 model Room {
-  room_id         Int     @id @default(autoincrement())
-  hotel_id        Int
+  room_id         String   @id @default(uuid())
+  hotel_id        String
   room_number     String
   room_type       String
   capacity        Int
   price_per_night Float
   availability    Boolean
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now())
 
   hotel    Hotel      @relation(fields: [hotel_id], references: [hotel_id])
   bookings Bookings[]
 }
 
 model User {
-  user_id   Int        @id @default(autoincrement())
-  name      String
-  email     String     @unique
-  password  String
-  phone     String
-  address   String
+  user_id    String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  phone      String
+  address    String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
   customers Customers?
 }
 
 model Customers {
-  customer_id      Int    @id @default(autoincrement())
-  user_id          Int    @unique
+  customer_id      String   @id @default(uuid())
+  user_id          String   @unique
   customer_name    String
   customer_id_card String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now())
 
   user     User       @relation(fields: [user_id], references: [user_id])
   bookings Bookings[]
@@ -60,9 +76,9 @@ model Customers {
 }
 
 model Bookings {
-  booking_id     Int      @id @default(autoincrement())
-  customer_id    Int
-  room_id        Int
+  booking_id     String   @id @default(uuid())
+  customer_id    String
+  room_id        String
   check_in_date  DateTime
   check_out_date DateTime
   total_price    Float
@@ -72,12 +88,14 @@ model Bookings {
 }
 
 model Reviews {
-  review_id   Int      @id @default(autoincrement())
-  hotel_id    Int
-  customer_id Int
+  review_id   String   @id @default(uuid())
+  hotel_id    String
+  customer_id String
   rating      Float
   comment     String
   timestamp   DateTime
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
 
   hotel    Hotel     @relation(fields: [hotel_id], references: [hotel_id])
   customer Customers @relation(fields: [customer_id], references: [customer_id])

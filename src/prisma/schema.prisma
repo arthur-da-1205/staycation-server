@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id         String   @id @default(uuid())
+  username   String   @unique
+  password   String
+  role       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Hotel {
+  hotel_id    String @id @default(uuid())
+  name        String
+  address     String
+  city        String
+  country     String
+  rating      Float
+  price_range String
+  amenities   String
+  description String
+
+  rooms   Room[]
+  Reviews Reviews[]
+}
+
+model Room {
+  room_id         String   @id @default(uuid())
+  hotel_id        String
+  room_number     String
+  room_type       String
+  capacity        Int
+  price_per_night Float
+  availability    Boolean
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now())
+
+  hotel    Hotel      @relation(fields: [hotel_id], references: [hotel_id])
+  bookings Bookings[]
+}
+
+model User {
+  user_id    String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  phone      String
+  address    String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  customers Customers?
+}
+
+model Customers {
+  customer_id      String   @id @default(uuid())
+  user_id          String   @unique
+  customer_name    String
+  customer_id_card String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now())
+
+  user     User       @relation(fields: [user_id], references: [user_id])
+  bookings Bookings[]
+  reviews  Reviews[]
+}
+
+model Bookings {
+  booking_id     String   @id @default(uuid())
+  customer_id    String
+  room_id        String
+  check_in_date  DateTime
+  check_out_date DateTime
+  total_price    Float
+
+  customer Customers @relation(fields: [customer_id], references: [customer_id])
+  room     Room      @relation(fields: [room_id], references: [room_id])
+}
+
+model Reviews {
+  review_id   String   @id @default(uuid())
+  hotel_id    String
+  customer_id String
+  rating      Float
+  comment     String
+  timestamp   DateTime
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+
+  hotel    Hotel     @relation(fields: [hotel_id], references: [hotel_id])
+  customer Customers @relation(fields: [customer_id], references: [customer_id])
+}

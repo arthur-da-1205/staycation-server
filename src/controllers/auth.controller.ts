@@ -1,17 +1,19 @@
-import { Request, Response } from "express";
-import { AuthLoginDto } from "../dto/auth.dto";
-import AuthService from "@services/auth.service";
-class AuthController {
-  public static async login(req: Request, res: Response): Promise<void> {
+import { NextFunction, Request, Response } from 'express';
+import { Service } from 'typedi';
+import { AuthService } from '@services';
+
+@Service()
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { username, password } = req.body;
-      const token = await AuthService.login({ username, password });
+      const result = await this.authService.login({ username, password });
 
-      res.status(200).json({ message: "Berhasil login", data: token });
+      res.status(200).json({ message: 'Berhasil login', data: result });
     } catch (error) {
-      res.status(401).json(error);
+      next(error);
     }
-  }
+  };
 }
-
-export default AuthController;

@@ -11,92 +11,125 @@ datasource db {
 }
 
 model Admin {
-  id         String   @id @default(uuid())
-  username   String   @unique
-  password   String
-  role       String
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  id        String   @id @default(uuid()) @db.Uuid
+  username  String   @map("username")
+  password  String   @map("password")
+  role      String   @map("role")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([username])
+  @@map("admins")
 }
 
 model Hotel {
-  hotel_id    String @id @default(uuid())
-  name        String
-  address     String
-  city        String
-  country     String
-  rating      Float
-  price_range String
-  amenities   String
-  description String
+  id          String   @id @default(uuid()) @db.Uuid
+  alias       String   @map("alias")
+  name        String   @map("name")
+  address     String   @map("address")
+  city        String   @map("city")
+  country     String   @map("country")
+  rating      Decimal  @default(0) @map("rating") @db.Decimal(2, 1)
+  priceRange  String   @map("price_range")
+  facilities  String   @map("facilities")
+  description String?  @map("description")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
-  rooms   Room[]
-  Reviews Reviews[]
+  Rooms   Room[]
+  Reviews Review[]
+
+  @@unique([alias])
+  @@map("hotels")
 }
 
 model Room {
-  room_id         String   @id @default(uuid())
-  hotel_id        String
-  room_number     String
-  room_type       String
-  capacity        Int
-  price_per_night Float
-  availability    Boolean
-  created_at      DateTime @default(now())
-  updated_at      DateTime @default(now())
+  id            String   @id @default(uuid()) @db.Uuid
+  hotelId       String   @map("hotel_id") @db.Uuid
+  roomNumber    String   @map("room_number")
+  type          RoomType @map("type")
+  capacity      Int      @default(1) @map("capacity")
+  pricePerNight Decimal  @default(0) @map("price_night") @db.Decimal(20, 2)
+  availability  Boolean  @default(true) @map("availability")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
 
-  hotel    Hotel      @relation(fields: [hotel_id], references: [hotel_id])
-  bookings Bookings[]
+  Hotel    Hotel     @relation(fields: [hotelId], references: [id])
+  Bookings Booking[]
+
+  @@map("rooms")
 }
 
 model User {
-  user_id    String   @id @default(uuid())
-  name       String
-  email      String   @unique
-  password   String
-  phone      String
-  address    String
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @map("name")
+  email     String   @map("email")
+  password  String   @map("password")
+  phone     String   @map("phone")
+  address   String   @map("address")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  customers Customers?
+  Customer Customer?
+
+  @@unique([email])
+  @@map("users")
 }
 
-model Customers {
-  customer_id      String   @id @default(uuid())
-  user_id          String   @unique
-  customer_name    String
-  customer_id_card String
-  created_at       DateTime @default(now())
-  updated_at       DateTime @default(now())
+model Customer {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  name      String   @map("name")
+  idCard    String   @map("id_Card")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  user     User       @relation(fields: [user_id], references: [user_id])
-  bookings Bookings[]
-  reviews  Reviews[]
+  User     User      @relation(fields: [userId], references: [id])
+  Bookings Booking[]
+  Reviews  Review[]
+
+  @@unique([userId])
+  @@map("customers")
 }
 
-model Bookings {
-  booking_id     String   @id @default(uuid())
-  customer_id    String
-  room_id        String
-  check_in_date  DateTime
-  check_out_date DateTime
-  total_price    Float
+model Booking {
+  id           String    @id @default(uuid()) @db.Uuid
+  customerId   String    @map("customer_id") @db.Uuid
+  roomId       String    @map("room") @db.Uuid
+  checkInDate  DateTime  @map("check_in_date")
+  checkOutDate DateTime? @map("check_out_date")
+  totalPrice   Decimal   @default(0) @map("total_price") @db.Decimal(20, 2)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at")
 
-  customer Customers @relation(fields: [customer_id], references: [customer_id])
-  room     Room      @relation(fields: [room_id], references: [room_id])
+  Customer Customer @relation(fields: [customerId], references: [id])
+  Room     Room     @relation(fields: [roomId], references: [id])
+
+  @@map("bookings")
 }
 
-model Reviews {
-  review_id   String   @id @default(uuid())
-  hotel_id    String
-  customer_id String
-  rating      Float
-  comment     String
-  timestamp   DateTime
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
+model Review {
+  id         String   @id @default(uuid()) @db.Uuid
+  hotelId    String   @map("hotel_id") @db.Uuid
+  customerId String   @map("customer_id") @db.Uuid
+  rate       Int      @default(0) @map("rate")
+  comment    String   @map("comment")
+  timestamp  DateTime @map("timestamp")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
-  hotel    Hotel     @relation(fields: [hotel_id], references: [hotel_id])
-  customer Customers @relation(fields: [customer_id], references: [customer_id])
+  Hotel    Hotel    @relation(fields: [hotelId], references: [id])
+  Customer Customer @relation(fields: [customerId], references: [id])
+
+  @@map("reviews")
+}
+
+enum RoomType {
+  EconomyRoom
+  StandardRoom
+  SuperiorRoom
+  DeluxeRoom
+  SuiteRoom
+  PenthouseRoom
+  FamilyRoom
 }

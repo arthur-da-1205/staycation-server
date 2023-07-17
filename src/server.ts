@@ -1,10 +1,10 @@
 import App from '@app';
-import { AuthRoute } from '@routes/mobile';
+import { AdminsRoute, AuthRoute } from '@routes/mobile';
 import validateEnv from '@utils/validateEnv';
 
 validateEnv();
 
-const mobileRoutes = [new AuthRoute()];
+const mobileRoutes = [new AuthRoute(), new AdminsRoute()];
 
 const app = new App([...mobileRoutes]);
 

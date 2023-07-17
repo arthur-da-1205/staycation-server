@@ -1,14 +1,22 @@
 import { Router } from 'express';
-
-import AdminController from '@controllers/admin.controller';
-import { CreateAdminDto } from '@dto/admin.dto';
-import { validationMiddleware } from '@middlewares/validattion.middleware';
+import { Routes } from '@interfaces';
+import Container from 'typedi';
+import { AdminController } from '@controllers';
 import authMiddleware from '@middlewares/auth.middleware';
+import validationMiddleware from '@middlewares/validattion.middleware';
+import { CreateAdminDto } from '@dto/admin.dto';
 
-const adminRouter = Router();
-const path = '/v1/admin';
+export class AdminsRoute implements Routes {
+  public path = 'v1/mobile/admins';
+  public router = Router();
+  public adminController = Container.get(AdminController);
 
-adminRouter.post(`${path}`, authMiddleware, AdminController.createAdmin);
-adminRouter.get(`${path}/list`, AdminController.getAllAdmins);
+  constructor() {
+    this.initializeRoutes();
+  }
 
-export default adminRouter;
+  private initializeRoutes() {
+    this.router.get(`${this.path}/list`, authMiddleware, this.adminController.getAllAdmins);
+    this.router.post(this.path, authMiddleware, validationMiddleware(CreateAdminDto, 'body'), this.adminController.createAdmin);
+  }
+}

@@ -1,4 +1,4 @@
-import RoomController from '@controllers/room.controller';
+import RoomController from '@controllers/Room.controller';
 import authMiddleware from '@middlewares/auth.middleware';
 import express from 'express';
 

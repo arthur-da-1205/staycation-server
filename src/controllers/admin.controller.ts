@@ -1,33 +1,30 @@
-import { NextFunction, Request, Response } from "express";
-import AdminService from "@services/admin.service";
-import { CreateAdminDto } from "@dto/admin.dto";
+import { NextFunction, Request, Response } from 'express';
+import { CreateAdminDto } from '@dto/admin.dto';
+import { AdminService } from '@services';
+import { Service } from 'typedi';
 
-class AdminController {
-  public static async getAllAdmins(req: Request, res: Response): Promise<void> {
+@Service()
+export class AdminController {
+  constructor(private readonly adminService: AdminService) {}
+
+  public getAllAdmins = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const admins = await AdminService.getAllAdmins();
-      res.json(admins);
+      const result = await this.adminService.getAllAdmins();
+
+      res.status(200).json({ message: 'Success get admin list', data: result });
     } catch (error) {
-      res.status(500).json({ error: "An error occurred" });
-    }
-  }
-
-  public static async createAdmin(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const data: CreateAdminDto = req.body;
-
-    try {
-      const newAdmin = await AdminService.createAdmin(data);
-
-      res.status(201).json({ message: "OK", result: newAdmin });
-    } catch (error) {
-      res.status(500).send(error);
       next(error);
     }
-  }
-}
+  };
 
-export default AdminController;
+  public createAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const args: CreateAdminDto = req.body;
+      const result = await this.adminService.createAdmin(args);
+
+      res.status(201).json({ message: 'Success create admin', data: result });
+    } catch (error) {
+      next(error);
+    }
+  };
+}

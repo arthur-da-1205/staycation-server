@@ -1,9 +1,11 @@
 import { CreateRoomDto, UpadateRoomDto } from '@dto/room.dto';
-import { HttpException } from '@libraries/httpException';
+import { HttpException } from '@exceptions/HttpException';
 import { prisma } from '@libraries/prisma';
 import { RoomModel } from '@model/room.model';
+import { Service } from 'typedi';
 
-class RoomService {
+@Service()
+export class RoomService {
   public static async getAllRooms(): Promise<any[]> {
     const rooms = await prisma.room.findMany();
 
@@ -66,5 +68,3 @@ class RoomService {
     });
   }
 }
-
-export default RoomService;

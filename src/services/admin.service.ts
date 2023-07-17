@@ -1,10 +1,12 @@
 import { CreateAdminDto } from '@dto/admin.dto';
 import { AdminModel } from '@model/admin.model';
 import { Bcrypt } from '@libraries/bcrypt';
-import { HttpException } from '@libraries/httpException';
 import { prisma } from '@libraries/prisma';
+import { HttpException } from '@exceptions/HttpException';
+import { Service } from 'typedi';
 
-class AdminService {
+@Service()
+export class AdminService {
   public static async getAllAdmins(): Promise<AdminModel[]> {
     return await prisma.admin.findMany();
   }
@@ -30,5 +32,3 @@ class AdminService {
     });
   }
 }
-
-export default AdminService;

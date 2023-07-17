@@ -1,5 +1,5 @@
 import { InputHotelDto } from '@dto/hotel.dto';
-import HotelService from '@services/hotel.service';
+import HotelService from '@services/Hotel.service';
 import { NextFunction, Request, Response } from 'express';
 
 class HotelController {

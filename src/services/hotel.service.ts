@@ -1,8 +1,10 @@
 import { InputHotelDto, UpdateHotelDto } from '@dto/hotel.dto';
 import { prisma } from '@libraries/prisma';
 import { HotelModel } from '@model/hotel.model';
+import { Service } from 'typedi';
 
-class HotelService {
+@Service()
+export class HotelService {
   public static async getAllHotels(): Promise<HotelModel[]> {
     const hotels = await prisma.hotel.findMany({
       include: {
@@ -36,5 +38,3 @@ class HotelService {
     });
   }
 }
-
-export default HotelService;

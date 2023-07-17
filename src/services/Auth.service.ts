@@ -1,8 +1,7 @@
-import { Jwt, sign } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { prisma } from '../libraries/prisma';
 import { AuthLoginDto } from '@dto/auth.dto';
 import { Bcrypt } from '../libraries/bcrypt';
-import bcrypt from 'bcrypt';
 import { AuthDataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { Service } from 'typedi';
 import { HttpException } from '@exceptions/HttpException';

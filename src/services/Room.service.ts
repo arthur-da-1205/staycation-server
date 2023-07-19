@@ -6,7 +6,7 @@ import { Service } from 'typedi';
 
 @Service()
 export class RoomService {
-  public static async getAllRooms(): Promise<any[]> {
+  public async getAllRooms(): Promise<any[]> {
     const rooms = await prisma.room.findMany();
 
     // const groupedData: { [key: string]: any[] } = {};
@@ -33,7 +33,7 @@ export class RoomService {
     return rooms;
   }
 
-  public static async getRoomById(id: string): Promise<any | null> {
+  public async getRoomById(id: string): Promise<any | null> {
     const room = await prisma.room.findUnique({
       where: { room_id: id },
     });
@@ -41,7 +41,7 @@ export class RoomService {
     return room;
   }
 
-  public static async createRoom(data: CreateRoomDto) {
+  public async createRoom(data: CreateRoomDto) {
     const hotelIsExist = await prisma.hotel.findUnique({
       where: { hotel_id: data.hotel_id },
     });
@@ -55,14 +55,14 @@ export class RoomService {
     return await prisma.room.create({ data });
   }
 
-  public static async updateRoom(id: string, data: Partial<UpadateRoomDto>): Promise<RoomModel> {
+  public async updateRoom(id: string, data: Partial<UpadateRoomDto>): Promise<RoomModel> {
     return await prisma.room.update({
       where: { room_id: id },
       data,
     });
   }
 
-  public static async deleteRoom(id: string): Promise<RoomModel> {
+  public async deleteRoom(id: string): Promise<RoomModel> {
     return await prisma.room.delete({
       where: { room_id: id },
     });

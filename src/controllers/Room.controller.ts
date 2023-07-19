@@ -1,79 +1,84 @@
 import { CreateRoomDto, UpadateRoomDto } from '@dto/room.dto';
-import { HttpException } from '@libraries/httpException';
-import { prisma } from '@libraries/prisma';
-import { RoomModel } from '@model/room.model';
-import HotelService from '@services/Hotel.service';
-import RoomService from '@services/Room.service';
+import { RoomService } from '@services';
 import { NextFunction, Request, Response } from 'express';
+import { Service } from 'typedi';
 
-class RoomController {
-  public static async getAllRooms(req: Request, res: Response): Promise<void> {
+@Service()
+export class RoomController {
+  constructor(private readonly roomService: RoomService) {}
+
+  public getAllRooms = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const rooms = await RoomService.getAllRooms();
+      const result = await this.roomService.getAllRooms();
 
-      res.status(200).json({ message: 'OK', data: rooms });
+      res.status(200).json({ message: 'Success get room list', data: result });
     } catch (error) {
-      res.status(500).json({ message: 'An error occurred' });
-    }
-  }
-
-  public static async getRoomById(req: Request, res: Response): Promise<void> {
-    const { id } = req.params;
-
-    try {
-      const room = await RoomService.getRoomById(id);
-
-      if (room) {
-        const hotel = await HotelService.getHotelById(room?.hotel_id);
-
-        const hotelName = hotel?.name;
-
-        res.status(200).json({ message: 'OK', data: { hotelName, ...room } });
-      } else {
-        res.status(404).json({ message: 'Room not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ message: 'An error occurred' });
-    }
-  }
-
-  public static async createRoom(req: Request, res: Response, next: NextFunction) {
-    const data: CreateRoomDto = req.body;
-
-    try {
-      const room = await RoomService.createRoom(data);
-
-      res.status(201).json({ message: 'OK', result: room });
-    } catch (error) {
-      res.status(500).json({ message: 'An error occurred' });
       next(error);
     }
-  }
+  };
 
-  public static async updateRoom(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
-    const data: UpadateRoomDto = req.body;
-
+  public getRoomById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const updatedRoom = await RoomService.updateRoom(id, data);
+      const { id } = req.params;
+      const result = await this.roomService.getRoomById(id);
 
-      res.status(200).json({ message: 'OK', data: updatedRoom });
+      res.status(200).json({ message: 'Success get room by id', data: result });
     } catch (error) {
-      res.status(500).json({ message: 'An error occurred' });
+      next(error);
     }
-  }
+  };
 
-  public static async deleteRoom(req: Request, res: Response): Promise<void> {
-    const { id } = req.params;
-
+  public createRoom = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const deletedRoom = await RoomService.deleteRoom(id);
+      const args: CreateRoomDto = req.body;
+      const result = await this.roomService.createRoom(args);
 
-      res.status(200).json({ message: 'OK', data: `${deletedRoom.room_id} deleted` });
+      res.status(201).json({ message: 'Success create room', data: result });
     } catch (error) {
-      res.status(500).json({ message: 'An error occurred' });
+      next(error);
     }
-  }
+  };
+
+  public updateRoom = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const args: UpadateRoomDto = req.body;
+      const result = await this.roomService.updateRoom(id, args);
+
+      res.status(200).json({ message: 'Success update room', data: result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteRoom = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const result = await this.roomService.deleteRoom(id);
+
+      res.status(200).json({ message: 'Success delete room', data: result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // public static async getRoomById(req: Request, res: Response): Promise<void> {
+  //   const { id } = req.params;
+
+  //   try {
+  //     const room = await RoomService.getRoomById(id);
+
+  //     if (room) {
+  //       const hotel = await HotelService.getHotelById(room?.hotel_id);
+
+  //       const hotelName = hotel?.name;
+
+  //       res.status(200).json({ message: 'OK', data: { hotelName, ...room } });
+  //     } else {
+  //       res.status(404).json({ message: 'Room not found' });
+  //     }
+  //   } catch (error) {
+  //     res.status(500).json({ message: 'An error occurred' });
+  //   }
+  // }
 }
-
-export default RoomController;

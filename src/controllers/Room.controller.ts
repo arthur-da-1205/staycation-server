@@ -3,7 +3,7 @@ import { HttpException } from '@libraries/httpException';
 import { prisma } from '@libraries/prisma';
 import { RoomModel } from '@model/room.model';
 import HotelService from '@services/Hotel.service';
-import RoomService from '@services/room.service';
+import RoomService from '@services/Room.service';
 import { NextFunction, Request, Response } from 'express';
 
 class RoomController {

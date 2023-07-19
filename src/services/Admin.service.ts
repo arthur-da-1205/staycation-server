@@ -7,11 +7,11 @@ import { Service } from 'typedi';
 
 @Service()
 export class AdminService {
-  public static async getAllAdmins(): Promise<AdminModel[]> {
+  public async getAllAdmins(): Promise<AdminModel[]> {
     return await prisma.admin.findMany();
   }
 
-  public static async createAdmin(data: CreateAdminDto) {
+  public async createAdmin(data: CreateAdminDto) {
     const checkExisting = await prisma.admin.findFirst({
       where: { username: data.username },
       select: { username: true },

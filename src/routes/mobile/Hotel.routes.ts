@@ -1,23 +1,25 @@
-import HotelController from '@controllers/hotel.controller';
+import { Router } from 'express';
+import { Routes } from '@interfaces';
+import Container from 'typedi';
+import { HotelController } from '@controllers';
 import authMiddleware from '@middlewares/auth.middleware';
-import express from 'express';
+import validationMiddleware from '@middlewares/validattion.middleware';
+import { InputHotelDto, UpdateHotelDto } from '@dto/hotel.dto';
 
-const hotelRouter = express.Router();
-const path = '/v1/hotel';
+export class HotelsRoute implements Routes {
+  public path = 'v1/mobile/hotels';
+  public router = Router();
+  public hotelController = Container.get(HotelController);
 
-// Get all hotels
-hotelRouter.get(`${path}/list`, HotelController.getAllHotels);
+  constructor() {
+    this.initializeRoutes();
+  }
 
-// Get a specific hotel
-hotelRouter.get(`${path}/:id`, HotelController.getHotelById);
-
-// Create a new hotel
-hotelRouter.post(`${path}`, authMiddleware, HotelController.createHotel);
-
-// Update a hotel
-hotelRouter.put(`${path}/:id`, authMiddleware, HotelController.updateHotel);
-
-// Delete a hotel
-hotelRouter.delete(`${path}/:id`, authMiddleware, HotelController.deleteHotel);
-
-export default hotelRouter;
+  private initializeRoutes() {
+    this.router.get(`${this.path}/list`, authMiddleware, this.hotelController.getAllHotels);
+    this.router.get(`${this.path}/:id`, authMiddleware, this.hotelController.getHotelById);
+    this.router.post(this.path, authMiddleware, validationMiddleware(InputHotelDto, 'body'), this.hotelController.createHotel);
+    this.router.patch(`${this.path}/:id`, authMiddleware, validationMiddleware(UpdateHotelDto, 'body'), this.hotelController.updateHotel);
+    this.router.delete(`${this.path}/:id`, authMiddleware, this.hotelController.deleteHotel);
+  }
+}

@@ -2,6 +2,7 @@ import { CreateRoomDto, UpadateRoomDto } from '@dto/room.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { prisma } from '@libraries/prisma';
 import { RoomModel } from '@model/room.model';
+import { Room } from '@prisma/client';
 import { Service } from 'typedi';
 
 @Service()
@@ -35,15 +36,15 @@ export class RoomService {
 
   public async getRoomById(id: string): Promise<any | null> {
     const room = await prisma.room.findUnique({
-      where: { room_id: id },
+      where: { id },
     });
 
     return room;
   }
 
   public async createRoom(data: CreateRoomDto) {
-    const hotelIsExist = await prisma.hotel.findUnique({
-      where: { hotel_id: data.hotel_id },
+    const hotelIsExist = await prisma.hotel.findFirst({
+      where: { id: data.hotelId },
     });
 
     if (!hotelIsExist) {
@@ -55,16 +56,16 @@ export class RoomService {
     return await prisma.room.create({ data });
   }
 
-  public async updateRoom(id: string, data: Partial<UpadateRoomDto>): Promise<RoomModel> {
+  public async updateRoom(id: string, data: Partial<UpadateRoomDto>): Promise<Room> {
     return await prisma.room.update({
-      where: { room_id: id },
+      where: { id },
       data,
     });
   }
 
-  public async deleteRoom(id: string): Promise<RoomModel> {
+  public async deleteRoom(id: string): Promise<Room> {
     return await prisma.room.delete({
-      where: { room_id: id },
+      where: { id },
     });
   }
 }

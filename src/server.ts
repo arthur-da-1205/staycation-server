@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import App from '@app';
 import { AdminsRoute, AuthRoute, HotelsRoute, RoomsRoute } from '@routes/mobile';
 import validateEnv from '@utils/validateEnv';

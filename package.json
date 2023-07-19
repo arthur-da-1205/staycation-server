@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "cross-env NODE_ENV=development nodemon",
     "build": "rm -rf build && node esbuild.js",
     "lint": "eslint src/** --ext .ts",
     "build:tsc": "tsc && tsc-alias",
@@ -39,6 +39,7 @@
     "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "prisma": "^4.15.0",
+    "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
     "typedi": "^0.10.0",
     "uuid": "^9.0.0",

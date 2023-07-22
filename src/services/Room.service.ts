@@ -1,7 +1,6 @@
 import { CreateRoomDto, UpadateRoomDto } from '@dto/room.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { prisma } from '@libraries/prisma';
-import { RoomModel } from '@model/room.model';
 import { Room } from '@prisma/client';
 import { Service } from 'typedi';
 

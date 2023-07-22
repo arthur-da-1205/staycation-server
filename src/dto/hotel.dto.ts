@@ -1,27 +1,32 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class HotelDto {
+  @IsNotEmpty({ message: 'Alias hotel harus diisi!' })
+  alias: string;
+
   @IsNotEmpty({ message: 'Nama hotel harus diisi!' })
-  name!: string;
+  name: string;
 
   @IsNotEmpty({ message: 'Alamat harus diisi!' })
-  address!: string;
+  address: string;
 
   @IsNotEmpty({ message: 'Kota harus diisi!' })
-  city!: string;
+  city: string;
 
-  @IsNotEmpty({ message: 'Kota harus diisi!' })
-  country!: string;
+  @IsNotEmpty({ message: 'Negara harus diisi!' })
+  country: string;
 
-  rating!: number;
+  @IsNotEmpty({ message: 'Rating harus diisi!' })
+  rating: number;
 
-  price_range!: string;
+  @IsNotEmpty({ message: 'Kisaran harga harus diisi!' })
+  priceRange: string;
 
-  @IsNotEmpty({ message: 'Kota harus diisi!' })
-  amenities!: string;
+  @IsNotEmpty({ message: 'Fasilitas harus diisi!' })
+  facilities: string;
 
-  @IsNotEmpty({ message: 'Kota harus diisi!' })
-  description!: string;
+  @IsOptional()
+  description?: string;
 }
 
 export class InputHotelDto extends HotelDto {}

@@ -4,22 +4,28 @@
   "overrides": [
     {
       "files": ["*.ts"],
-      "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
-      ],
-      "parserOptions": { "project": ["./tsconfig.json"] }
+      "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+      "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+      }
     }
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/strict-boolean-expressions": [
-      2,
-      {
-        "allowString": false,
-        "allowNumber": false
-      }
-    ]
+    "@typescript-eslint/strict-boolean-expressions": [2, { "allowString": false, "allowNumber": false }],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-parameter-properties": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
   },
   "ignorePatterns": ["*!,*", "dist", "build", "node_modules"]
 }

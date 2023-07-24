@@ -1,24 +1,28 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { RoomType } from '@prisma/client';
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class RoomDto {
   @IsNotEmpty({ message: 'Hotel harus diisi!' })
-  hotel_id!: string;
+  hotelId!: string;
 
   @IsNotEmpty({ message: 'Nomor Room harus diisi!' })
   @IsString({ message: 'Nomor room harus string!' })
-  room_number!: string;
+  roomNumber!: string;
 
   @IsNotEmpty({ message: 'Tipe room harus diisi!' })
-  room_type!: string;
+  @IsEnum(RoomType)
+  type!: RoomType;
 
+  @IsNotEmpty()
   @IsNumber()
   capacity!: number;
 
   @IsBoolean()
   availability!: boolean;
 
+  @IsNotEmpty()
   @IsNumber()
-  price_per_night!: number;
+  pricePerNight!: number;
 }
 
 export class CreateRoomDto extends RoomDto {}

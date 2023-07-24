@@ -1,15 +1,17 @@
 import { CreateAdminDto } from '@dto/admin.dto';
 import { AdminModel } from '@model/admin.model';
 import { Bcrypt } from '@libraries/bcrypt';
-import { HttpException } from '@libraries/httpException';
 import { prisma } from '@libraries/prisma';
+import { HttpException } from '@exceptions/HttpException';
+import { Service } from 'typedi';
 
-class AdminService {
-  public static async getAllAdmins(): Promise<AdminModel[]> {
+@Service()
+export class AdminService {
+  public async getAllAdmins(): Promise<AdminModel[]> {
     return await prisma.admin.findMany();
   }
 
-  public static async createAdmin(data: CreateAdminDto) {
+  public async createAdmin(data: CreateAdminDto) {
     const checkExisting = await prisma.admin.findFirst({
       where: { username: data.username },
       select: { username: true },
@@ -30,5 +32,3 @@ class AdminService {
     });
   }
 }
-
-export default AdminService;

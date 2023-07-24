@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(uuid()) @db.Uuid
+  username  String   @map("username")
+  password  String   @map("password")
+  role      String   @map("role")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([username])
+  @@map("admins")
+}
+
+model Hotel {
+  id          String   @id @default(uuid()) @db.Uuid
+  alias       String   @map("alias")
+  name        String   @map("name")
+  address     String   @map("address")
+  city        String   @map("city")
+  country     String   @map("country")
+  rating      Decimal  @default(0) @map("rating") @db.Decimal(2, 1)
+  priceRange  String   @map("price_range")
+  facilities  String   @map("facilities")
+  description String?  @map("description")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Rooms   Room[]
+  Reviews Review[]
+
+  @@unique([alias])
+  @@map("hotels")
+}
+
+model Room {
+  id            String   @id @default(uuid()) @db.Uuid
+  hotelId       String   @map("hotel_id") @db.Uuid
+  roomNumber    String   @map("room_number")
+  type          RoomType @map("type")
+  capacity      Int      @default(1) @map("capacity")
+  pricePerNight Decimal  @default(0) @map("price_night") @db.Decimal(20, 2)
+  availability  Boolean  @default(true) @map("availability")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Hotel    Hotel     @relation(fields: [hotelId], references: [id])
+  Bookings Booking[]
+
+  @@map("rooms")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @map("name")
+  email     String   @map("email")
+  password  String   @map("password")
+  phone     String   @map("phone")
+  address   String   @map("address")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Customer Customer?
+
+  @@unique([email])
+  @@map("users")
+}
+
+model Customer {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  name      String   @map("name")
+  idCard    String   @map("id_Card")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  User     User      @relation(fields: [userId], references: [id])
+  Bookings Booking[]
+  Reviews  Review[]
+
+  @@unique([userId])
+  @@map("customers")
+}
+
+model Booking {
+  id           String    @id @default(uuid()) @db.Uuid
+  customerId   String    @map("customer_id") @db.Uuid
+  roomId       String    @map("room") @db.Uuid
+  checkInDate  DateTime  @map("check_in_date")
+  checkOutDate DateTime? @map("check_out_date")
+  totalPrice   Decimal   @default(0) @map("total_price") @db.Decimal(20, 2)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  Customer Customer @relation(fields: [customerId], references: [id])
+  Room     Room     @relation(fields: [roomId], references: [id])
+
+  @@map("bookings")
+}
+
+model Review {
+  id         String   @id @default(uuid()) @db.Uuid
+  hotelId    String   @map("hotel_id") @db.Uuid
+  customerId String   @map("customer_id") @db.Uuid
+  rate       Int      @default(0) @map("rate")
+  comment    String   @map("comment")
+  timestamp  DateTime @map("timestamp")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Hotel    Hotel    @relation(fields: [hotelId], references: [id])
+  Customer Customer @relation(fields: [customerId], references: [id])
+
+  @@map("reviews")
+}
+
+enum RoomType {
+  EconomyRoom
+  StandardRoom
+  SuperiorRoom
+  DeluxeRoom
+  SuiteRoom
+  PenthouseRoom
+  FamilyRoom
+}

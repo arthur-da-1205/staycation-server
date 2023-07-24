@@ -1,4 +1,7 @@
 # compiled output
-/dist
-/node_modules
+node_modules
+dist
+
+src/logs/*
 .env
+.env.development.local
